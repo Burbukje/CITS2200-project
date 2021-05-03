@@ -10,6 +10,7 @@ public class MyProject implements Project {
         for(int i = 0; i<adjlist.length; i++){
             for(int j = 0; j <adjlist.length; j++){
                 if(i!=j && adjlist[i][j]==0){ 
+                    //Hi
                     return false;
                 }
             
