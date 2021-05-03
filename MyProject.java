@@ -1,22 +1,26 @@
-// Full Name (StudentNum)
+// Tristan Ward (22756187)
 import java.util.*;
+import java.util.Graph;
 
 public class MyProject implements Project {
     
     ///////////// Private Methods implemented for modular use ///////////////
 
-
+    /** 
     private int getNumberOfVertices(int[][] adjlist){
         int v = 0;
-        for (c : adjlist[][0]) {
+        for (int c : adjlist.length) {
             v++;
         }
     }
+    */
 
     private Graph calculateTranspose(int[][] adjlist, int v){
         Graph<Integer> adjtranspose = new Graph<Integer>();
-        for (int i=0; i < v; i++){
-            for (int c : adjlist[i]){
+        for (int i=0; i < v; i++)
+        {
+            for (int c : adjlist[i])
+            {
                 adjtranspose.connect(c,i);
             }
         }
@@ -40,9 +44,10 @@ public class MyProject implements Project {
         }
         return true;
     }
+    }
 
     public int numPaths(int[][] adjlist, int src, int dst) {
-        v = getNumberOfVertices(adjlist);
+        v = adjlist.length;
 
        // get distances from lab 6 to achieve minimun spaning tree from dst
 
@@ -81,7 +86,6 @@ public class MyProject implements Project {
         // the queue "q" is empty so we can reuse it 
 
         int paths = 0;
-		char[] colour = new char[v];
 
         // colour can also be reused if we set all values to white
 		for(int c = 0; c < v ; c++){
@@ -98,7 +102,7 @@ public class MyProject implements Project {
                 if(x == dst) { path++;}
 				if(colour[x]== 'w'){
 					colour[x] = 'g';
-					if(distances(w) => distances(x)){ q.addLast(x);}
+					if(distances(w) >= distances(x)){ q.addLast(x);}
 				}				
 			}
 			colour[w] = 'b';
