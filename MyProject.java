@@ -117,12 +117,15 @@ public class MyProject implements Project {
     }
 
     public int numPaths(int[][] adjlist, int src, int dst) {
+        if (src == dst) {
+            return 1;
+        } // to simply solve when src is = to dst.
 
         // get distances from lab 6 to achieve minimun spaning tree from dst
 
         // Need to use the transpose of the adjlist as we want the tree that leads to
         // dst.
-        Vector<Vector<Integer>> gtranspose = calculateTranspose(adjlist);
+        int[][] gtranspose = calculateTranspose(adjlist);
         /**
          * // BFS implementation LinkedList<Integer> q = new LinkedList<Integer>();
          * int[] distances = new int[v]; char[] colour = new char[v];
@@ -138,11 +141,11 @@ public class MyProject implements Project {
          * colour[w] = 'b'; }
          */
 
-        boolean[] inMST = new boolean[gtranspose.size()];
-        int[] key = new int[gtranspose.size()];
+        boolean[] inMST = new boolean[gtranspose.length];
+        int[] key = new int[gtranspose.length];
         int pathWeight;
 
-        for (int c = 0; c < gtranspose.size(); c++) {
+        for (int c = 0; c < gtranspose.length; c++) {
             inMST[c] = false;
             key[c] = -1;
         }
@@ -156,11 +159,11 @@ public class MyProject implements Project {
                 inMST[u.getVertex()] = true;
                 key[u.getVertex()] = u.getWeight();
 
-                for (int v = 0; v < gtranspose.size(); v++) {
+                for (int v = 0; v < gtranspose.length; v++) {
                     // Vector<Integer> rowVector = gtranspose.get(u).get(v) ;
 
-                    if (inMST[v] == false && gtranspose.get(u.getVertex()).get(v) > 0) {
-                        pathWeight = u.getWeight() + gtranspose.get(u.getVertex()).get(v);
+                    if (inMST[v] == false && gtranspose[u.getVertex()][v] > 0) {
+                        pathWeight = u.getWeight() + gtranspose[u.getVertex()][v];
                         edgePQ.add(new Edge(v, pathWeight));
                     }
 
