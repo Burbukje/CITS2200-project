@@ -1,48 +1,49 @@
-// Tristan Ward (22756187)
 
+/**
+ * @author Tristan Ward (22756187)
+ * @author Burbukje Shakjiri (22579289)
+*/
 import java.util.*;
 
 public class MyProject implements Project {
 
     ///////////// Private Methods implemented for modular use ///////////////
 
+    /**
+     * calculateTranspose (int[][] adjlist): is used to calculate the transpose of a
+     * directed unweighted adjacency List
+     * 
+     * @param adjlist is an array of arrays that represents the adjacencies of a
+     *                grapgh
+     * @return 2D array transpose matrix of a adjacency list
+     */
     private int[][] calculateTranspose(int[][] adjlist) {
-        /**
-         * Vector<Vector<Integer>? Vector<Vector<Integer>> adjtranspose = new
-         * Vector<Vector<Integer>>(); ; // Max number of edges is equal to (vertices -
-         * 1)
-         * 
-         * for (int i = 0; i < adjlist.length; i++) { adjtranspose.add(i, new
-         * Vector<Integer>()); }
-         * 
-         * for (int i = 0; i < adjlist.length; i++) { for (int c : adjlist[i]) { // rws
-         * in adjlist become columns in adjtranspose /** Vector<Integer> rowVector =
-         * adjtranspose.get(c); rowVector.add(i);
-         */
-        /**
-         * adjtranspose.get(c).add(i); } }
-         */
-        int[][] adjtranspose = new int[adjlist.length][adjlist.length];
-        ; // Max number of edges is equal to (vertices - 1)
 
+        // the transpose is a square matrix
+        int[][] adjtranspose = new int[adjlist.length][adjlist.length];
+        ;
+
+        // Initialize all values to 0
         for (int i = 0; i < adjlist.length; i++) {
             for (int j = 0; j < adjlist.length; j++) {
                 adjtranspose[i][j] = 0;
             }
         }
 
+        // Add all original edges of the adgacency list but pointing in the oposite
+        // direction.
         for (int i = 0; i < adjlist.length; i++) {
             for (int c : adjlist[i]) { // rws in adjlist become columns in adjtranspose
-                /**
-                 * Vector<Integer> rowVector = adjtranspose.get(c); rowVector.add(i);
-                 */
-
                 adjtranspose[c][i] = 1;
             }
         }
         return adjtranspose;
     }
 
+    /**
+     * Edge class implements and then Overrides the Comparable in the priority
+     * queue.
+     */
     private class Edge implements Comparable<Edge> {
         private int vertex;
         private int weight;
@@ -117,93 +118,93 @@ public class MyProject implements Project {
     }
 
     public int numPaths(int[][] adjlist, int src, int dst) {
+
+        // Requirement: return 1 when src is equal to dst.
         if (src == dst) {
             return 1;
-        } // to simply solve when src is = to dst.
+        }
 
-        // get distances from lab 6 to achieve minimun spaning tree from dst
-
-        // Need to use the transpose of the adjlist as we want the tree that leads to
-        // dst.
-        int[][] gtranspose = calculateTranspose(adjlist);
         /**
-         * // BFS implementation LinkedList<Integer> q = new LinkedList<Integer>();
-         * int[] distances = new int[v]; char[] colour = new char[v];
-         * 
-         * for(int c = 0; c < v ; c++){ colour[c] = 'w'; distances[c] = -1; }
-         * 
-         * distances[dst] = 0; colour[dst] = 'g'; q.add( dst );
-         * 
-         * while (!q.isEmpty()){ int w = q.removeFirst(); for (int x : gtranspose[w]){
-         * // might not work as getVerticesConectedTo returns a list and not an array
-         * if(colour[x]== 'w'){ distances[x] = distances[w] +1; //CHECK IF CORRECT. w is
-         * the parent of x so I think it is correct. colour[x] = 'g'; q.addLast(x); } }
-         * colour[w] = 'b'; }
+         * Dijktra's algorithm to calculate shortest path
          */
 
-        boolean[] inMST = new boolean[gtranspose.length];
-        int[] key = new int[gtranspose.length];
-        int pathWeight;
-
-        for (int c = 0; c < gtranspose.length; c++) {
-            inMST[c] = false;
+         /**
+        int[] key = new int[adjlist.length]; // stores the Shortest path from any vertex to dst
+        int pathWeight; // Makes code more readible
+        int paths = 0;
+        // Specify that there are no vertices in the MST with an undefined shortest path
+        for (int c = 0; c < adjlist.length; c++) {
             key[c] = -1;
         }
 
         PriorityQueue<Edge> edgePQ = new PriorityQueue<>();
-        edgePQ.add(new Edge(dst, 0));
+        edgePQ.add(new Edge(src, 0));
 
         while (!edgePQ.isEmpty()) {
             Edge u = edgePQ.poll();
-            if (inMST[u.getVertex()] == false) {
-                inMST[u.getVertex()] = true;
-                key[u.getVertex()] = u.getWeight();
+            if (key[u.getVertex()] == -1) {
+                key[u.getVertex()] = 1;
 
-                for (int v = 0; v < gtranspose.length; v++) {
-                    // Vector<Integer> rowVector = gtranspose.get(u).get(v) ;
-
-                    if (inMST[v] == false && gtranspose[u.getVertex()][v] > 0) {
-                        pathWeight = u.getWeight() + gtranspose[u.getVertex()][v];
+                for (int v : adjlist[u.getVertex()]) {
+                    if (v == dst) {
+                        paths++;
+                        key[v] = 1;
+                    }
+                    if (key[u.getVertex()] == -1) {
+                        // pathWeight was added to make code more readeble
+                        pathWeight = 1;
                         edgePQ.add(new Edge(v, pathWeight));
                     }
-
                 }
+
             }
         }
+        */
 
-        // distances stores the shortest distance from all vertices to dst
-
-        // BFS but only add vertices that have a shorter distance to dst than current
-        // vertex.
-        // the queue "q" is empty so we can reuse it
-        int[] colour = new int[adjlist.length];
-        int paths = 0;
-        LinkedList<Integer> q = new LinkedList<Integer>();
-        // colour can also be reused if we set all values to white
-
-        for (int c = 0; c < adjlist.length; c++) {
-            colour[c] = 'w';
-        }
-
-        colour[src] = 'g';
-        q.add(src);
-
-        while (!q.isEmpty()) {
-            int w = q.removeFirst();
-            for (int x : adjlist[w]) {
-                if (x == dst) {
-                    paths++;
-                }
-                if (colour[x] == 'w') {
-                    colour[x] = 'g';
-                    if (key[w] >= key[x]) {
-                        q.addLast(x);
-                    }
-                }
-            }
-            colour[w] = 'b';
-        }
-
+        /**
+         * // Need to calculate the transpose of the adjlist as we want the shortest
+         * path // tree // that leads to dst int[][] gtranspose =
+         * calculateTranspose(adjlist);
+         * 
+         * /** Dijktra's algorithm to calculate shortest path
+         */
+       
+         boolean[] inMST = new boolean[gtranspose.length]; int[] key = new
+         int[gtranspose.length]; // stores the Shortest path from any vertex to dst
+         int pathWeight; // Makes code more readible
+          
+         // Specify that there are no vertices in the MST with an undefined shortest
+         path for (int c = 0; c < gtranspose.length; c++) { inMST[c] = false; key[c] =
+         -1; }
+          
+          PriorityQueue<Edge> edgePQ = new PriorityQueue<>(); edgePQ.add(new Edge(dst,
+         0));
+          
+          while (!edgePQ.isEmpty()) { Edge u = edgePQ.poll(); if (inMST[u.getVertex()]
+          == false) { inMST[u.getVertex()] = true; key[u.getVertex()] = u.getWeight();
+          
+          for (int v = 0; v < gtranspose.length; v++) { // Vector<Integer> rowVector =
+          gtranspose.get(u).get(v) ;
+          
+          if (inMST[v] == false && gtranspose[u.getVertex()][v] > 0) { // pathWeight
+          was added to make code more readeble pathWeight = u.getWeight() +
+          gtranspose[u.getVertex()][v]; edgePQ.add(new Edge(v, pathWeight)); }
+          
+          } } }
+          
+          // BFS to add vertices that have a shorter distance to dst than current //
+          vertex. // If the vertex reached is the destination, then increment path.
+          int[] colour = new int[adjlist.length]; int paths = 0; LinkedList<Integer> q
+          = new LinkedList<Integer>();
+          
+          // No vertex has been visited so we mark all values to white for (int c = 0;
+          c < adjlist.length; c++) { colour[c] = 'w'; }
+          
+          colour[src] = 'g'; q.add(src);
+          
+          while (!q.isEmpty()) { int w = q.removeFirst(); for (int x : adjlist[w]) { if
+          (x == dst) { paths++; } if (colour[x] == 'w') { if (key[w] >= key[x]) {
+          q.addLast(x); } } } colour[w] = 'b'; }
         return paths;
     }
 
@@ -213,7 +214,34 @@ public class MyProject implements Project {
     }
 
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
-        // TODO
+        /**
+         * Dijktra's algorithm to calculate shortest path
+         */
+        /**
+         * boolean[] inMST = new boolean[adjlist.length]; int[] key = new
+         * int[adjlist.length]; // stores the Fastest path to each vertex added to the
+         * fastest spanning // tree. will be used to calculate path speed. int maxSpeed;
+         * // stores the maximun download speed
+         * 
+         * // Specify that there are no vertices in the MST with an undefined shortest
+         * path for (int c = 0; c < gtranspose.length; c++) { inMST[c] = false; key[c] =
+         * -1; }
+         * 
+         * PriorityQueue<Edge> edgePQ = new PriorityQueue<>(); edgePQ.add(new Edge(dst,
+         * 0));
+         * 
+         * while (!edgePQ.isEmpty()) { Edge u = edgePQ.poll(); if (inMST[u.getVertex()]
+         * == false) { inMST[u.getVertex()] = true; key[u.getVertex()] = u.getWeight();
+         * 
+         * for (int v = 0; v < gtranspose.length; v++) { // Vector<Integer> rowVector =
+         * gtranspose.get(u).get(v) ;
+         * 
+         * if (inMST[v] == false && gtranspose[u.getVertex()][v] > 0) { // pathWeight
+         * was added to make code more readeble pathWeight = u.getWeight() +
+         * gtranspose[u.getVertex()][v]; edgePQ.add(new Edge(v, pathWeight)); }
+         * 
+         * } } }
+         */
         return 0;
     }
 }
