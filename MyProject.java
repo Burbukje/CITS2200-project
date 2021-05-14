@@ -123,13 +123,11 @@ public class MyProject implements Project {
         if (src == dst) {
             return 1;
         }
-        /**
-         * // Need to calculate the transpose of the adjlist as we want the shortest
-         * path // tree // that leads to dst int[][] gtranspose =
-         * calculateTranspose(adjlist);
-         * 
-         * /** Dijktra's algorithm to calculate shortest path
-         */
+
+        // Need to calculate the transpose of the adjlist as we want the shortest path
+        // tree that leads to dst
+        int[][] gtranspose = calculateTranspose(adjlist);
+        // Dijktra's algorithm to calculate shortest path
 
         boolean[] inMST = new boolean[gtranspose.length];
         int[] key = new int[gtranspose.length]; // stores the Shortest path from any vertex to dst
@@ -150,11 +148,10 @@ public class MyProject implements Project {
                 inMST[u.getVertex()] = true;
                 key[u.getVertex()] = u.getWeight();
 
-                for (int v = 0; v < gtranspose.length; v++) { // Vector<Integer> rowVector =
-                    gtranspose.get(u).get(v);
+                for (int v = 0; v < gtranspose.length; v++) {
 
-                    if (inMST[v] == false && gtranspose[u.getVertex()][v] > 0) { // pathWeight was added to make code
-                                                                                 // more readeble
+                    if (inMST[v] == false && gtranspose[u.getVertex()][v] > 0) {
+                        // pathWeight was added to make code more readeble
                         pathWeight = u.getWeight() + gtranspose[u.getVertex()][v];
                         edgePQ.add(new Edge(v, pathWeight));
                     }
@@ -199,34 +196,99 @@ public class MyProject implements Project {
     }
 
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
-        /**
-         * Dijktra's algorithm to calculate shortest path
+
+        // Questions:
+        // Should masDownloadspeed test #2 = 0? 5 is disconected
+        //
+
+        if (src == dst) {
+            return -1;
+        }
+        /*
+         * Returns true if there is a path from source 's' to sink 't' in residual
+         * graph. Also fills parent[] to store the path
          */
-        /**
-         * boolean[] inMST = new boolean[adjlist.length]; int[] key = new
-         * int[adjlist.length]; // stores the Fastest path to each vertex added to the
-         * fastest spanning // tree. will be used to calculate path speed. int maxSpeed;
-         * // stores the maximun download speed
-         * 
-         * // Specify that there are no vertices in the MST with an undefined shortest
-         * path for (int c = 0; c < gtranspose.length; c++) { inMST[c] = false; key[c] =
-         * -1; }
-         * 
-         * PriorityQueue<Edge> edgePQ = new PriorityQueue<>(); edgePQ.add(new Edge(dst,
-         * 0));
-         * 
-         * while (!edgePQ.isEmpty()) { Edge u = edgePQ.poll(); if (inMST[u.getVertex()]
-         * == false) { inMST[u.getVertex()] = true; key[u.getVertex()] = u.getWeight();
-         * 
-         * for (int v = 0; v < gtranspose.length; v++) { // Vector<Integer> rowVector =
-         * gtranspose.get(u).get(v) ;
-         * 
-         * if (inMST[v] == false && gtranspose[u.getVertex()][v] > 0) { // pathWeight
-         * was added to make code more readeble pathWeight = u.getWeight() +
-         * gtranspose[u.getVertex()][v]; edgePQ.add(new Edge(v, pathWeight)); }
-         * 
-         * } } }
-         */
-        return 0;
+        boolean visited[] = new boolean[adjlist.length];
+        int u, v;
+        int rGraph[][] = new int[adjlist.length][adjlist.length];
+        int parent[] = new int[adjlist.length];
+        int max_flow = 0; // There is no flow initially
+        boolean dstFound = true;
+        int path_flow = Integer.MAX_VALUE;
+        LinkedList<Integer> queue = new LinkedList<Integer>();
+
+        // Initialize all values
+        for (int i = 0; i < adjlist.length; i++) {
+
+            for (int j = 0; j < adjlist.length; j++) {
+                rGraph[i][j] = 0;
+            }
+            for (int c = 0; c < adjlist[i].length; c++) { // rws in adjlist become columns in adjtranspose
+                rGraph[i][c] = speeds[i][c];
+            }
+        }
+
+        while (dstFound) {
+            dstFound = false;
+
+            for (int i = 0; i < adjlist.length; ++i) {
+                visited[i] = false;
+                parent[i] = -1;
+            }
+
+            queue.add(src);
+            visited[src] = true;
+            parent[src] = -1;
+
+            // Standard BFS Loop /////////////////////////////
+            while (queue.size() != 0) {
+                u = queue.poll();
+
+                for (v = 0; v < adjlist.length; v++) {
+                    if (visited[v] == false && rGraph[u][v] > 0) {
+                        // If we find a connection to the sink
+                        // node, then there is no point in BFS
+                        // anymore We just have to set its parent
+                        // and can return true
+                        if (v == dst) {
+                            parent[v] = u;
+                            dstFound = true;
+                            queue.clear();
+                            System.out.println("queue size  /////////////////////////   " + queue.size());
+                        } else {
+                            queue.add(v);
+                            parent[v] = u;
+                            visited[v] = true;
+                        }
+                    }
+                }
+            }
+
+            // Find minimum residual capacity of the edhes /////
+            // along the path filled by BFS. Or we can say
+            // find the maximum flow through the path found.
+            System.out.println("dst Found " + dstFound);
+            if (dstFound) {
+                System.out.println("dst Found " + dstFound);
+                for (v = dst; v != src; v = parent[v]) {
+                    u = parent[v];
+                    path_flow = Math.min(path_flow, rGraph[u][v]);
+                }
+                System.out.println("path flow " + path_flow);
+
+                // update residual capacities of the edges and
+                // reverse edges along the path
+                for (v = dst; v != src; v = parent[v]) {
+                    u = parent[v];
+                    rGraph[u][v] -= path_flow;
+                    rGraph[v][u] += path_flow;
+                }
+
+                // Add path flow to overall flow
+                max_flow += path_flow;
+                System.out.println("max_flow " + max_flow);
+            }
+        }
+        return max_flow;
     }
 }
