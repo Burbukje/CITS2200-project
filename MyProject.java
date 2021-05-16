@@ -9,36 +9,10 @@ public class MyProject implements Project {
     public boolean allDevicesConnected(int[][] adjlist) {
         // TODO
         //Return: boolean indicating whether all of the devices in the network are connected to the network
-        ////startVertex = 0;
-        //run DFS;
-        //graph represented as an array of linked lists
-        // 2 pointers: front and rear node
-        //list[i].addFirst(j; ?????
-        //O(N)
-        //a 2d array of 2 elements, start vertex and end vertex
-       // boolean connected = new boolean;
-
-    //    //CONVERT to adjacency list
-    //    int l = adjlist[0].length;
-    //    ArrayList<ArrayList<Integer>> adjListArray = new ArrayList<ArrayList<Integer>>(l);
-    //    for (int i = 0; i < l; i++){
-    //        adjListArray.add(new ArrayList<Integer>());
-    //    }
-    //    int i, j;
-    //    for (i = 0; i < adjlist[0].length; i++){
-    //        for (j = 0; j < adjlist.length; j++){
-    //            if  (adjlist[i][j] == 1){
-    //                adjListArray.get(i).add(j);
-    //            }
-    //        }
-    //   
-     
-
-      
+       
 
         int n = adjlist.length-1;
-       // boolean[] visited = new boolean[n];
-        int start = 0;
+     
        
         //ArrayList<ArrayList<Integer[]>> transpose = new ArrayList<ArrayList<Integer>>(n);
 
@@ -66,23 +40,7 @@ public class MyProject implements Project {
         return connected;
     }
 
-        
-    //     for(int i : adjlist[u.getVertex()]){
-        // u represents the neighbor, it points to 
-    //         //
-    //         if(visited[i]==true){
-    //             //perform dfs
-    //         }
-    //         for(int j = 0; j <adjlist.length; j++){
-    //             if(!visited[i]&&!visited[j] && adjlist[i][j] == 0){ 
-    //                 connected = false;
-    //             } else {
-    //                 connected = true;
-    //             }         
-    //   }
-    
-    
-  //}
+
 
     public int numPaths(int[][] adjlist, int src, int dst) {
     //     // TODO
