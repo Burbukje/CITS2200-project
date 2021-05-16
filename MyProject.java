@@ -3,7 +3,8 @@ import java.util.*;
 //import java.util.Graph;
 
 public class MyProject implements Project {
-  
+
+        
 
     public boolean allDevicesConnected(int[][] adjlist) {
         // TODO
@@ -16,51 +17,47 @@ public class MyProject implements Project {
         //O(N)
         //a 2d array of 2 elements, start vertex and end vertex
        // boolean connected = new boolean;
-        int n = adjlist.length-1;
-        boolean[] visited = new boolean[n];
-        int start = 0;
-        Queue<Integer> q = new LinkedList<>();
-       // visited[n-1]=false;
-        int[] key = new int[n];
-        int [] source = new int[n];
-      //  int [] dest = new int[n];
-        for (int i = 0; i < n; i++) {
-            for(int j = i+1; j<n; j++){
-            visited[i] = true;
-            key[i] = -1;
-            
-        
-         q.add(source[0]);
-       while(!q.isEmpty()){
-           int m = q.remove();
-           for (int x: adjlist[m]){
-               if(visited[x]){
-                   key[x] = m;
-                   if(visited[source[i]]){
-                   q.add(i);}
-               }}
-                 }
-                }}
-      //       }
 
-
-       //     visited[source] = true;
-      //    for(int j = 0; j<n; j++){
-      //     for(int i : adjlist[v.getVertex()]){
-      //       if(visited[v]==false){
-      //           //perform dfs from j 
-      //       }
-            
-      //     }}
-        boolean connected = false;
+    //    //CONVERT to adjacency list
+    //    int l = adjlist[0].length;
+    //    ArrayList<ArrayList<Integer>> adjListArray = new ArrayList<ArrayList<Integer>>(l);
+    //    for (int i = 0; i < l; i++){
+    //        adjListArray.add(new ArrayList<Integer>());
+    //    }
+    //    int i, j;
+    //    for (i = 0; i < adjlist[0].length; i++){
+    //        for (j = 0; j < adjlist.length; j++){
+    //            if  (adjlist[i][j] == 1){
+    //                adjListArray.get(i).add(j);
+    //            }
+    //        }
+    //   
+     
 
       
-       int count = 0;
-        for(int c=0; c<q.size(); c++){
-            if(visited[c]){
-                count++;
-            }
-        }
+
+        int n = adjlist.length-1;
+       // boolean[] visited = new boolean[n];
+        int start = 0;
+       
+        //ArrayList<ArrayList<Integer[]>> transpose = new ArrayList<ArrayList<Integer>>(n);
+
+        //Integer[][] transpose = new ArrayList<ArrayList<Integer>>(n);
+        ArrayList<ArrayList<Integer>> transpose = new ArrayList<ArrayList<Integer>>(n);
+
+       //Integer[] transpose = new Integer [n];
+       
+        boolean connected = false;
+
+        int count = 0;
+    
+        for (int i = 0; i < n; i++) {
+            for(int j :adjlist[i]){
+                n = adjlist[i][j];
+                transpose[n].add(i);
+            }}
+           
+ 
         if(n==count){
             connected=true;
         }else {
@@ -94,6 +91,31 @@ public class MyProject implements Project {
 
      public int[] closestInSubnet(int[][] adjlist, short[][] addrs, int src, short[][] queries) {
     //     // TODO
+    //min span tree??? min shortest path????
+    //min number of edges to reach a connected node
+    // int n = adjlist.length;
+    // int cost = 0;
+    // boolean[] visited = new boolean[n];
+    // int[] key = new int[n];
+    // int source = 0;
+
+    // PriorityQueue<Edge> q  = new PriorityQueue<>();
+    // q.add(new Edge(source, 0));
+
+    // for(int i = 0; i < n; i ++){
+    //     visited[i] = false;
+    //     key[i] = -1;
+    //     key[0] = 0;
+    // }
+
+    // while (!q.isEmpty()){
+    //     Edge u = q.poll();
+    //     if (visited[u.vertex]==false){
+    //         key[u.vertex] = u.weight;
+    //         visited[u.vertex] = true;
+    //         cost = cost + u.weight;
+    //     }
+    // }
          return null;
      }
 
