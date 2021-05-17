@@ -9,18 +9,19 @@ public class MyProject implements Project {
     public boolean allDevicesConnected(int[][] adjlist) {
         // TODO
         //Return: boolean indicating whether all of the devices in the network are connected to the network
-       
+        ////startVertex = 0;
+        //run DFS;
+        //graph represented as an array of linked lists
+        // 2 pointers: front and rear node
+        //list[i].addFirst(j; ?????
+        //O(N)
+        //a 2d array of 2 elements, start vertex and end vertex
+      
 
-        int n = adjlist.length-1;
-     
+        int n = adjlist.length;
        
-        //ArrayList<ArrayList<Integer[]>> transpose = new ArrayList<ArrayList<Integer>>(n);
+        ArrayList<ArrayList<Integer>> transpose = new ArrayList<>(n);
 
-        //Integer[][] transpose = new ArrayList<ArrayList<Integer>>(n);
-        ArrayList<ArrayList<Integer>> transpose = new ArrayList<ArrayList<Integer>>(n);
-
-       //Integer[] transpose = new Integer [n];
-       
         boolean connected = false;
 
         int count = 0;
@@ -28,7 +29,10 @@ public class MyProject implements Project {
         for (int i = 0; i < n; i++) {
             for(int j :adjlist[i]){
                 n = adjlist[i][j];
-                transpose[n].add(i);
+                //transpose[n].add(i);
+                transpose.get(n).add(i);
+                int trcount = transpose.size();
+                count = count + trcount;
             }}
            
  
@@ -40,6 +44,7 @@ public class MyProject implements Project {
         return connected;
     }
 
+        
 
 
     public int numPaths(int[][] adjlist, int src, int dst) {
