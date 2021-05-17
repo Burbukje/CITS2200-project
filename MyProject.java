@@ -197,10 +197,6 @@ public class MyProject implements Project {
 
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
 
-        // Questions:
-        // Should masDownloadspeed test #2 = 0? 5 is disconected
-        //
-
         if (src == dst) {
             return -1;
         }
@@ -224,7 +220,7 @@ public class MyProject implements Project {
                 rGraph[i][j] = 0;
             }
             for (int c = 0; c < adjlist[i].length; c++) { // rws in adjlist become columns in adjtranspose
-                rGraph[i][c] = speeds[i][c];
+                rGraph[i][adjlist[i][c]] = speeds[i][c];
             }
         }
 
@@ -241,7 +237,7 @@ public class MyProject implements Project {
             parent[src] = -1;
 
             // Standard BFS Loop /////////////////////////////
-            while (queue.size() != 0) {
+            while (queue.size() != 0 && !dstFound) {
                 u = queue.poll();
 
                 for (v = 0; v < adjlist.length; v++) {
@@ -254,7 +250,6 @@ public class MyProject implements Project {
                             parent[v] = u;
                             dstFound = true;
                             queue.clear();
-                            System.out.println("queue size  /////////////////////////   " + queue.size());
                         } else {
                             queue.add(v);
                             parent[v] = u;
@@ -267,14 +262,11 @@ public class MyProject implements Project {
             // Find minimum residual capacity of the edhes /////
             // along the path filled by BFS. Or we can say
             // find the maximum flow through the path found.
-            System.out.println("dst Found " + dstFound);
             if (dstFound) {
-                System.out.println("dst Found " + dstFound);
                 for (v = dst; v != src; v = parent[v]) {
                     u = parent[v];
                     path_flow = Math.min(path_flow, rGraph[u][v]);
                 }
-                System.out.println("path flow " + path_flow);
 
                 // update residual capacities of the edges and
                 // reverse edges along the path
@@ -286,7 +278,6 @@ public class MyProject implements Project {
 
                 // Add path flow to overall flow
                 max_flow += path_flow;
-                System.out.println("max_flow " + max_flow);
             }
         }
         return max_flow;
