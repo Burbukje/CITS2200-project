@@ -106,15 +106,36 @@ public class MyProject implements Project {
     ///////////// Public methods of Project ////////////////////////////////////
 
     public boolean allDevicesConnected(int[][] adjlist) {
-        // TODO
-        // Return: boolean indicating whether all of the devices in the network are
-        // connected to the network
-        /**
-         * for (int i = 0; i < adjlist.length; i++) { for (int j = 0; j <
-         * adjlist.length; j++) { if (i != j && adjlist[i][j] == 0) { // Hi return
-         * false; } } }
-         */
-        return true;
+        int[] parents = new int[adjlist.length];
+        int vertexNumber = 0;
+
+        for (int i = 0; i < adjlist.length; i++) {
+            parents[i] = -1;
+        }
+
+        Queue<Integer> q = new LinkedList<Integer>();
+
+        q.offer(0);
+
+        while (!q.isEmpty()) {
+
+            int w = q.poll();
+
+            for (int i : adjlist[w]) {
+
+                if (i != w && parents[i] == -1) {
+
+                    parents[i] = w;
+                    vertexNumber++;
+                    q.offer(i);
+
+                }
+            }
+        }
+        if (vertexNumber == adjlist.length) {
+            return true;
+        }
+        return false;
     }
 
     public int numPaths(int[][] adjlist, int src, int dst) {
@@ -125,10 +146,10 @@ public class MyProject implements Project {
         }
 
         // Need to calculate the transpose of the adjlist as we want the shortest path
-        // tree that leads to dst
+        // tree from any vertex to dst
         int[][] gtranspose = calculateTranspose(adjlist);
-        // Dijktra's algorithm to calculate shortest path
 
+        // Dijktra's algorithm to calculate shortest path
         boolean[] inMST = new boolean[gtranspose.length];
         int[] key = new int[gtranspose.length]; // stores the Shortest path from any vertex to dst
         int pathWeight; // Makes code more readible
@@ -200,10 +221,7 @@ public class MyProject implements Project {
         if (src == dst) {
             return -1;
         }
-        /*
-         * Returns true if there is a path from source 's' to sink 't' in residual
-         * graph. Also fills parent[] to store the path
-         */
+
         boolean visited[] = new boolean[adjlist.length];
         int u, v;
         int rGraph[][] = new int[adjlist.length][adjlist.length];
@@ -219,11 +237,13 @@ public class MyProject implements Project {
             for (int j = 0; j < adjlist.length; j++) {
                 rGraph[i][j] = 0;
             }
-            for (int c = 0; c < adjlist[i].length; c++) { // rws in adjlist become columns in adjtranspose
+            for (int c = 0; c < adjlist[i].length; c++) {
+
                 rGraph[i][adjlist[i][c]] = speeds[i][c];
             }
         }
 
+        // max Flow algorithm using Ford-Fulkerson algorithm
         while (dstFound) {
             dstFound = false;
 
@@ -242,10 +262,9 @@ public class MyProject implements Project {
 
                 for (v = 0; v < adjlist.length; v++) {
                     if (visited[v] == false && rGraph[u][v] > 0) {
-                        // If we find a connection to the sink
+                        // If we find a connection to the destination
                         // node, then there is no point in BFS
-                        // anymore We just have to set its parent
-                        // and can return true
+                        // anymore.
                         if (v == dst) {
                             parent[v] = u;
                             dstFound = true;
@@ -259,9 +278,7 @@ public class MyProject implements Project {
                 }
             }
 
-            // Find minimum residual capacity of the edhes /////
-            // along the path filled by BFS. Or we can say
-            // find the maximum flow through the path found.
+            // If a path was found update capacities of edges and max flow.
             if (dstFound) {
                 for (v = dst; v != src; v = parent[v]) {
                     u = parent[v];
