@@ -27,7 +27,7 @@ public class MyProject implements Project {
         int count = 0;
     
         for (int i = 0; i < n; i++) {
-            for(int j :adjlist[i]){
+            for(int j = 0; j< adjlist[i].length; j++){
                 n = adjlist[i][j];
                 //transpose[n].add(i);
                 transpose.get(n).add(i);
@@ -54,33 +54,46 @@ public class MyProject implements Project {
 
      public int[] closestInSubnet(int[][] adjlist, short[][] addrs, int src, short[][] queries) {
     //     // TODO
-    //min span tree??? min shortest path????
-    //min number of edges to reach a connected node
-    // int n = adjlist.length;
-    // int cost = 0;
-    // boolean[] visited = new boolean[n];
-    // int[] key = new int[n];
-    // int source = 0;
+    //loop over the elements of the adjlist
+    //get the addrs, assign [i] element of the addrs to every node of adjlist
+    //loop through the [j] element of addrs
+    //compare the elements of [j] array to queries
+    Queue<Integer> q = new LinkedList<>();
+    q.offer(src);
+      int n = adjlist.length;
+      boolean[] visited = new boolean[n];
+      for (int i=0; i <n; i++){
+          for(int j=0; j< adjlist[i].length; j++){
+              n = adjlist[i][j];
+          }
+      }
+      int[] hops = new int[n];
+      for(int i = 0; i < n; i++){
+          hops[i] = -1;
+          visited[i] = false;
+        }
 
-    // PriorityQueue<Edge> q  = new PriorityQueue<>();
-    // q.add(new Edge(source, 0));
 
-    // for(int i = 0; i < n; i ++){
-    //     visited[i] = false;
-    //     key[i] = -1;
-    //     key[0] = 0;
-    // }
-
-    // while (!q.isEmpty()){
-    //     Edge u = q.poll();
-    //     if (visited[u.vertex]==false){
-    //         key[u.vertex] = u.weight;
-    //         visited[u.vertex] = true;
-    //         cost = cost + u.weight;
-    //     }
-    // }
-         return null;
-     }
+      while(!q.isEmpty()){
+          int current = q.poll();
+          visited[current] = true;
+          for(int i = 0; i < n; i++){
+              for(int j=0; j < adjlist[i].length; j++){
+                  n = adjlist[i][j];
+              }
+          }
+            for (short i =0; i < n; i++){
+                for(short j = 0; j < addrs[i].length; j++){
+                if((visited[i]==false)&&(queries[j].equals(addrs[j]))){
+                    visited[i] = true;
+                    hops[i] = hops[current] + 1;
+                   // q.offer(i);
+                } else if (current==src){
+                    hops[src] = 0;
+                }
+            }}}
+            return hops;
+           }
 
      public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
     //     // TODO
