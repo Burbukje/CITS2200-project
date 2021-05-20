@@ -84,17 +84,45 @@ public class MyProject implements Project {
           }
             for (short i =0; i < n; i++){
                 for(short j = 0; j < addrs[i].length; j++){
-                if((visited[i]==false)&&(queries[j].equals(addrs[j]))){
+                if((visited[i]==false)&&(queries[j].isSubnet(addrs[j]))){
                     visited[i] = true;
-                    hops[i] = hops[current] + 1;
+                    if(current == src){
+                        hops[src] = 0;
+                    }else{
+                        hops[i] = hops[current] + 1;
+                    }
                    // q.offer(i);
-                } else if (current==src){
-                    hops[src] = 0;
+                }else {
+                     for(int c = 0; c < adjlist[j].length; c++){
+                         if(queries[j].isSubnet(addrs[c])){
+                             hops[i] = hops[current] + 1;
+                         }
+                     }
+                   // addrs[i] = addrs[i+1];
+                   //use helper function to check the arrays manually 
                 }
+                
             }}}
             return hops;
            }
 
+
+        //   for(short c=0; c<n; c++){
+        //       for(short k=0; k< addrs[c].length; k++){
+
+        //         if(addrs[k].equals(queries[j])){
+        //             //hops[i] = weight of addrs[k] to queries[j]
+        //             int edge = 0;
+        //             edge = edge + 1;
+        //             hops[i] = edge;
+                    //OOOORRRRR 
+                    //edges = edges + 1??? doesnt rreally make sense
+                //}   
+                  //if(addrs[j].equals(queries.get(j)))
+                  //hops.add edge
+             // }
+         // }}}
+     // }
      public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
     //     // TODO
          return 0;
