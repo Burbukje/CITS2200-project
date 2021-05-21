@@ -5,6 +5,37 @@ import java.util.*;
 public class MyProject implements Project {
 
         
+    private int[][] calculateTranspose(int[][] adjlist) {
+
+        // the transpose is a square matrix
+        int[][] adjtranspose = new int[adjlist.length][adjlist.length];
+        ;
+
+        // Initialize all values to 0
+        for (int i = 0; i < adjlist.length; i++) {
+            for (int j = 0; j < adjlist.length; j++) {
+                adjtranspose[i][j] = 0;
+            }
+        }
+
+        // Add all original edges of the adgacency list but pointing in the oposite
+        // direction.
+        for (int i = 0; i < adjlist.length; i++) {
+            for (int c : adjlist[i]) { // rws in adjlist become columns in adjtranspose
+                adjtranspose[c][i] = 1;
+            }
+        }
+        return adjtranspose;
+    }
+
+     public boolean isSubnet(short[] queries, short[] addrs){
+
+                  for(short c=0; c < queries.length; c++){
+                
+                 if (queries[c]!=addrs[c]){
+                      return false;}
+                  } return true;
+                }
 
     public boolean allDevicesConnected(int[][] adjlist) {
         // TODO
@@ -52,77 +83,70 @@ public class MyProject implements Project {
      return 0;
      }
 
+     
      public int[] closestInSubnet(int[][] adjlist, short[][] addrs, int src, short[][] queries) {
-    //     // TODO
-    //loop over the elements of the adjlist
-    //get the addrs, assign [i] element of the addrs to every node of adjlist
-    //loop through the [j] element of addrs
-    //compare the elements of [j] array to queries
-    Queue<Integer> q = new LinkedList<>();
-    q.offer(src);
-      int n = adjlist.length;
-      boolean[] visited = new boolean[n];
-      for (int i=0; i <n; i++){
-          for(int j=0; j< adjlist[i].length; j++){
-              n = adjlist[i][j];
-          }
-      }
-      int[] hops = new int[n];
-      for(int i = 0; i < n; i++){
-          hops[i] = -1;
-          visited[i] = false;
-        }
-
-
-      while(!q.isEmpty()){
-          int current = q.poll();
-          visited[current] = true;
-          for(int i = 0; i < n; i++){
-              for(int j=0; j < adjlist[i].length; j++){
+        //     // TODO
+        //loop over the elements of the adjlist
+        //get the addrs, assign [i] element of the addrs to every node of adjlist
+        //loop through the [j] element of addrs
+        //compare the elements of [j] array to queries
+        //use hashmaps 
+        //store ewvery element according to their power 
+        //the method you have so far is shit
+        //toooo complex
+        int n = adjlist.length;
+        boolean[] visited = new boolean[n];
+        int[] hops = new int[n];
+       
+        int[][] transpose = calculateTranspose(adjlist);
+    
+       
+    
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(src);
+         
+         // ArrayList<ArrayList<Integer>> transpose = new ArrayList<>(n);
+          
+          for (int i=0; i <n; i++){
+              for(int j=0; j< adjlist[i].length; j++){
                   n = adjlist[i][j];
+                  //transpose[n].add(i);
               }
           }
-            for (short i =0; i < n; i++){
-                for(short j = 0; j < addrs[i].length; j++){
-                if((visited[i]==false)&&(queries[j].isSubnet(addrs[j]))){
-                    visited[i] = true;
-                    if(current == src){
-                        hops[src] = 0;
-                    }else{
-                        hops[i] = hops[current] + 1;
-                    }
-                   // q.offer(i);
-                }else {
-                     for(int c = 0; c < adjlist[j].length; c++){
-                         if(queries[j].isSubnet(addrs[c])){
-                             hops[i] = hops[current] + 1;
-                         }
-                     }
-                   // addrs[i] = addrs[i+1];
-                   //use helper function to check the arrays manually 
-                }
+         
+          
+    
+          while(!q.isEmpty()){
+              
+              int current = q.poll();
+              visited[current] = true;
+               for(int i = 0; i < transpose.length; i++){
+                   for(int j=0; j < adjlist[i].length; j++){
+                       n = adjlist[i][j];
+                   }
+               }
+            
                 
-            }}}
-            return hops;
-           }
-
-
-        //   for(short c=0; c<n; c++){
-        //       for(short k=0; k< addrs[c].length; k++){
-
-        //         if(addrs[k].equals(queries[j])){
-        //             //hops[i] = weight of addrs[k] to queries[j]
-        //             int edge = 0;
-        //             edge = edge + 1;
-        //             hops[i] = edge;
-                    //OOOORRRRR 
-                    //edges = edges + 1??? doesnt rreally make sense
-                //}   
-                  //if(addrs[j].equals(queries.get(j)))
-                  //hops.add edge
-             // }
-         // }}}
-     // }
+              
+              for (short i =0; i < transpose.length; i++){
+                    for(short j = 0; j < addrs[i].length; j++){
+                      //  this.isSubnet(queries, addrs);
+                    if((visited[i]==false)&&(isSubnet(queries[j], addrs[j]))){
+                        visited[i] = true;
+                       // q.offer(i);
+                        if(current == src){
+                            hops[src] = 0;  
+                        }else{
+                            hops[i] = hops[current] + 1;
+                        }}
+                    else{
+                        hops[i] = Integer.MAX_VALUE;
+                    }
+                }
+            }
+            }
+                return hops;
+               }
      public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
     //     // TODO
          return 0;
