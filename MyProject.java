@@ -21,7 +21,6 @@ public class MyProject implements Project {
 
         // the transpose is a square matrix
         int[][] adjtranspose = new int[adjlist.length][adjlist.length];
-        ;
 
         // Initialize all values to 0
         for (int i = 0; i < adjlist.length; i++) {
@@ -101,6 +100,25 @@ public class MyProject implements Project {
                 return 0;
             }
         }
+    }
+
+    /**
+     * inSubnet (short[] queries, short[] addrs): is used to determin if address on
+     * node equals any query
+     * 
+     * @param query IP address.
+     * @param addrs IP address
+     * @return boolean. true if adreess matches quary
+     */
+    public boolean isSubnet(short[] queries, short[] addrs) {
+
+        for (short c = 0; c < queries.length; c++) {
+
+            if (queries[c] != addrs[c]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     ///////////// Public methods of Project ////////////////////////////////////
@@ -212,8 +230,64 @@ public class MyProject implements Project {
     }
 
     public int[] closestInSubnet(int[][] adjlist, short[][] addrs, int src, short[][] queries) {
-        // TODO
-        return null;
+        int[] distances = new int[adjlist.length];
+        int[] hops = new int[queries.length];
+
+        for (int i = 0; i < adjlist.length; i++) {
+            distances[i] = Integer.MAX_VALUE;
+        }
+        for (int i = 0; i < queries.length; i++) {
+            hops[i] = Integer.MAX_VALUE;
+        }
+
+        Queue<Integer> q = new LinkedList<Integer>();
+
+        q.offer(src);
+        distances[src] = 0;
+        // Check if src matches any queries and if there is any empty queries
+        for (int j = 0; j < queries.length; j++) {
+            if (queries[j].length != 0 && isSubnet(queries[j], addrs[src])) {
+                hops[j] = distances[src];
+            }
+
+            if (queries[j].length == 0) {
+
+                hops[j] = 0;
+            }
+        }
+
+        // BFS loop
+        while (!q.isEmpty()) {
+
+            int w = q.poll();
+
+            for (int i : adjlist[w]) {
+
+                if (i != w && distances[i] == Integer.MAX_VALUE) {
+
+                    distances[i] = distances[w] + 1;
+                    q.offer(i);
+                }
+
+                // Check if adjacent vertex/device matches any address in queries
+                for (int j = 0; j < queries.length; j++) {
+                    if (hops[j] > distances[i] && queries[j].length != 0 && isSubnet(queries[j], addrs[i])) {
+                        hops[j] = distances[i];
+                    }
+                }
+
+            }
+        }
+
+        // check if queries matches any addresses
+        for (int j = 0; j < queries.length; j++) {
+            for (int i = 0; i < addrs.length; i++) {
+                if (hops[j] > distances[i] && queries[j].length != 0 && isSubnet(queries[j], addrs[i])) {
+                    hops[j] = distances[i];
+                }
+            }
+        }
+        return hops;
     }
 
     public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
