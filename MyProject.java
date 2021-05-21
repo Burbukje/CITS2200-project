@@ -96,56 +96,41 @@ public class MyProject implements Project {
         //toooo complex
         int n = adjlist.length;
         boolean[] visited = new boolean[n];
-        int[] hops = new int[n];
+        int[] hops = new int[queries.length];
+        int[] distance = new int[n];
        
-        int[][] transpose = calculateTranspose(adjlist);
-    
-       
+      
     
         Queue<Integer> q = new LinkedList<>();
         q.offer(src);
+        visited[src] = true;
+        distance[src] = 0;
+       // hops[src] = 0;
          
-         // ArrayList<ArrayList<Integer>> transpose = new ArrayList<>(n);
-          
-          for (int i=0; i <n; i++){
-              for(int j=0; j< adjlist[i].length; j++){
-                  n = adjlist[i][j];
-                  //transpose[n].add(i);
-              }
-          }
-         
-          
+        for(int i = 0; i < n; i++){
+            visited[i]=false;
+            hops[i] = Integer.MAX_VALUE;
+        }
     
-          while(!q.isEmpty()){
-              
-              int current = q.poll();
-              visited[current] = true;
-               for(int i = 0; i < transpose.length; i++){
-                   for(int j=0; j < adjlist[i].length; j++){
-                       n = adjlist[i][j];
-                   }
-               }
-            
-                
-              
-              for (short i =0; i < transpose.length; i++){
-                    for(short j = 0; j < addrs[i].length; j++){
-                      //  this.isSubnet(queries, addrs);
-                    if((visited[i]==false)&&(isSubnet(queries[j], addrs[j]))){
-                        visited[i] = true;
-                       // q.offer(i);
-                        if(current == src){
-                            hops[src] = 0;  
-                        }else{
-                            hops[i] = hops[current] + 1;
-                        }}
-                    else{
-                        hops[i] = Integer.MAX_VALUE;
-                    }
+        while(!q.isEmpty()) {
+            int current = q.poll();
+    
+            for (int j = 0; j < queries.length; j++) {
+                //System.out.println("j " + j + "current " + current);
+                if (hops[j] == Integer.MAX_VALUE && isSubnet(queries[j], addrs[current])) {
+                    hops[j] = distance[current];
                 }
             }
+    
+            for (int i = 0; i < adjlist[current].length; i++) {
+                int m = adjlist[current][i];
+                if (!visited[m]) {
+                    visited[m] = true;
+                    q.offer(m);
+                }
             }
-                return hops;
+        }
+    
                }
      public int maxDownloadSpeed(int[][] adjlist, int[][] speeds, int src, int dst) {
     //     // TODO
